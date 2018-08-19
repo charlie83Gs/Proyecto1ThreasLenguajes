@@ -13,6 +13,8 @@ import javafx.scene.paint.Color;
  *
  * @author Charlie
  */
+
+//falta impelentar instanciaciopn con pista invertida
 public class TrackQueue {
     
     int trackId;
@@ -26,6 +28,7 @@ public class TrackQueue {
         this.xPos = xPos;
         this.width = width;
         this.height = height;
+        figuras = new ArrayList<>();
     }
     
     public void update(float pXpos, float pWidth, float pHeigth){
@@ -33,11 +36,30 @@ public class TrackQueue {
         height = pHeigth;
         xPos = pXpos;
         
+        for(ThreadFigure figure: figuras){
+            figure.xPos = xPos + width / 2;
+        }
+        
     }
     
+    //falta impelentar instanciaciopn con pista invertida
+    public ThreadFigure createFigure(float speed){
+        ThreadFigure newFigure = new ThreadFigure();
+        newFigure.setSpeed(speed);
+        newFigure.xPos = xPos + width / 2;
+        newFigure.yPos = 0;
+        
+        figuras.add(newFigure);
+        
+        return newFigure; 
+    
+    }
     
     public void paintSelf(){
         Painter.getPainter().paintTrack(xPos,width,height);
+        for(ThreadFigure figure: figuras){
+            figure.paintSelf();
+        }
     }
     
     

@@ -41,7 +41,7 @@ public class Painter {
     
     }
     
-    public void paintFigure(float pXpos, float pYpos,Color pFigureColor,FigureType pFigureType){
+    public void paintFigure(float pXpos, float pYpos,float size, Color pFigureColor,FigureType pFigureType){
         //dibujamos en el color de la figura
         context.setFill(pFigureColor);
         switch(pFigureType){
