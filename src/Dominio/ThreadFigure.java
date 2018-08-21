@@ -22,6 +22,9 @@ public class ThreadFigure {
     TrackQueue track;
     float actualXPos;
     int pos;
+    float speed;
+    float size = 10;
+
 
     public ThreadFigure() {
         figurecolor = Color.hsb(Math.random()*360, 1, 1);
@@ -41,11 +44,39 @@ public class ThreadFigure {
     
     public void paintSelf(){
         
-        Painter.getPainter().paintFigure(xPos, yPos, figurecolor, figureType);
+        Painter.getPainter().paintFigure(xPos, yPos,size, figurecolor, figureType);
     }
     
-    public void update(){
-        
+    public void update(float pWidth,float pHeigth){
+        //float nsize = pWidth*0.9f;
+        size = pWidth*0.9f;
         
     }
+
+    public float getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(float speed) {
+        this.speed = speed;
+    }
+
+    public float getxPos() {
+        return xPos;
+    }
+
+    public void setxPos(float xPos) {
+        this.xPos = xPos;
+    }
+
+    public float getyPos() {
+        return yPos;
+    }
+
+    public void setyPos(float yPos) {
+        this.yPos = yPos;
+    }
+    
+    
+    
 }
