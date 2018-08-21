@@ -112,7 +112,8 @@ public class FXMLDocumentController implements Initializable {
     //funciones para los botones
     @FXML
     public void createFigures(){
-        
+        controller.createFigures(5.0f, 20);
+
     }
     
     @FXML
