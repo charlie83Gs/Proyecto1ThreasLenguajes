@@ -6,6 +6,7 @@
 package Dominio;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
@@ -22,7 +23,10 @@ public class TrackQueue {
     float width;
     float height;
     Controller myController;
+    boolean goDown;
     ArrayList<ThreadFigure> figuras;
+    boolean paused;
+    boolean barrier;
 
     public TrackQueue(int trackId, float xPos, float width, float height, Controller pmyController) {
         this.trackId = trackId;
@@ -31,6 +35,8 @@ public class TrackQueue {
         this.height = height;
         figuras = new ArrayList<>();
         this.myController = pmyController;
+        goDown = true;
+        paused = false;
     }
     
     public void update(float pXpos, float pWidth, float pHeigth){
@@ -51,7 +57,13 @@ public class TrackQueue {
         newFigure.setSpeed(1.0f+speed*(float)Math.random());
         newFigure.setTrack(this);
         newFigure.xPos = xPos + width / 2;
-        newFigure.yPos = 0;
+        if(this.isGoDown()){
+            newFigure.yPos = 0;
+           
+        }
+        else{
+            newFigure.yPos = height;
+        }
         
         figuras.add(0,newFigure);
         
@@ -72,22 +84,75 @@ public class TrackQueue {
         }
         return figuras.get(figuras.indexOf(thisFigure) + 1);
     }
+    
+    private synchronized void removeLastFigure(ThreadFigure thisFigure){
+        figuras.remove(thisFigure);
+    }
 
     public synchronized boolean checkColition(ThreadFigure thisFigure){
         ThreadFigure nextFigure = this.getNext(thisFigure);
         //caso en el que no hay mas figuras
+        if(paused)return true;
         if(nextFigure == null) return false;
         
-        if(((thisFigure.yPos + (thisFigure.size)) > nextFigure.getyPos()) != myController.isGoDown()){   // no pega con otro
-            if((thisFigure.yPos < height) == myController.isGoDown()){   // llega al final
+        
+        //kills threead figure 
+        if (thisFigure.getyPos() < 0 || thisFigure.getyPos() > height) {
+            thisFigure.setAlive(false);
+            removeLastFigure(thisFigure);
+            return false;
+        }
+        
+        
+        if(myController.isGoDown()){
+            if(thisFigure.yPos + (thisFigure.size) <= nextFigure.getyPos()+1){
                 return false;
-            }else{
-                //kills threead figure 
-                thisFigure.setAlive(false);
-                figuras.remove(thisFigure);
+            }
+        }else{
+            if(thisFigure.yPos - (thisFigure.size) >= nextFigure.getyPos()-1){
+                return false;
             }
         }
+        
+        
+        /*if(((thisFigure.yPos + (thisFigure.size)) > nextFigure.getyPos()) != myController.isGoDown()){   // no pega con otro
+                return false;
+        }
+        if(((thisFigure.yPos - (thisFigure.size)) < nextFigure.getyPos()) == !myController.isGoDown()){   // no pega con otro
+                return false;
+        }*/
+        
+        
         return true;
     }
+    
+    
+    public void invertFigures(){
+       Collections.reverse(this.figuras);
+       this.goDown = !this.goDown;
+    }
+    
+    public void barrier(){
+        
+    }
+
+    public synchronized boolean isGoDown() {
+        return goDown;
+    }
+
+    public synchronized void setGoDown(boolean goDown) {
+        this.goDown = goDown;
+    }
+
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
+    }
+    
+    
+    
     
 }

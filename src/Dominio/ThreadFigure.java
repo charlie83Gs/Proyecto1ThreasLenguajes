@@ -62,7 +62,7 @@ public class ThreadFigure {
     
     public synchronized void updatePosition(){
        if(!track.checkColition(this)){
-           if(myController.isGoDown()){
+           if(track.isGoDown()){
             yPos += speed;
         }
            else{
@@ -70,7 +70,7 @@ public class ThreadFigure {
            }
        }
     }
-
+    
     public float getSpeed() {
         return speed;
     }

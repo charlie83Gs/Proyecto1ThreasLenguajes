@@ -149,7 +149,7 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     public void revert() {
-
+        controller.invertTracks();
     }
 
     @FXML
@@ -159,7 +159,7 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     public void interrupt() {
-
+        controller.togglePaused();
     }
 
 }

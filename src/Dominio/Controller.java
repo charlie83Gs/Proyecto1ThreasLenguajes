@@ -20,6 +20,7 @@ public class Controller {
     boolean goDown;
     ArrayList<TrackQueue> tracks;
     ExecutorService threadPool;
+    boolean paused;
 
     public Controller(int numTracks, float pWidht, float pHeight) {
         tracks = new ArrayList<>();
@@ -29,6 +30,7 @@ public class Controller {
         updateTracks(pWidht, pHeight);
         threadPool = Executors.newCachedThreadPool();
         goDown = true;
+        paused = false;
     }
     
     
@@ -70,17 +72,39 @@ public class Controller {
        }
     }
 
-    public boolean isGoDown() {
+    public  synchronized  boolean isGoDown() {
         return goDown;
     }
+
+    public synchronized void setGoDown(boolean goDown) {
+        this.goDown = goDown;
+    }
+   
+    
     
     public void stop(){
         threadPool.shutdownNow();
     }
     
-    public void invertTracks(){
-        
+    public  synchronized  void invertTracks(){
+        this.goDown = !this.goDown;
+        for(TrackQueue thisTrack : tracks){
+            thisTrack.invertFigures();
+        }
     }
+
+    public boolean isPaused() {
+        return paused;
+    }
+
+    public void togglePaused() {
+        paused = !paused;
+        
+        for(TrackQueue track: tracks){
+            track.setPaused(paused);
+        }
+    }
+    
     
     
 }
