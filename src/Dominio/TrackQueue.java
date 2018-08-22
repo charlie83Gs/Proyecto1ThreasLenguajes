@@ -48,11 +48,12 @@ public class TrackQueue {
     //falta impelentar instanciaciopn con pista invertida
     public ThreadFigure createFigure(float speed){
         ThreadFigure newFigure = new ThreadFigure();
-        newFigure.setSpeed(speed);
+        newFigure.setSpeed(1.0f+speed*(float)Math.random());
+        newFigure.setTrack(this);
         newFigure.xPos = xPos + width / 2;
         newFigure.yPos = 0;
         
-        figuras.add(newFigure);
+        figuras.add(0,newFigure);
         
         return newFigure; 
     
@@ -65,15 +66,25 @@ public class TrackQueue {
         }
     }
     
-    private ThreadFigure getNext(ThreadFigure thisFigure){
+    private synchronized ThreadFigure getNext(ThreadFigure thisFigure){
+        if(figuras.indexOf(thisFigure) + 1 >= figuras.size()){
+            return null;
+        }
         return figuras.get(figuras.indexOf(thisFigure) + 1);
     }
 
-    public boolean checkColition(ThreadFigure thisFigure){
+    public synchronized boolean checkColition(ThreadFigure thisFigure){
         ThreadFigure nextFigure = this.getNext(thisFigure);
-        if(((thisFigure.yPos + (thisFigure.size/2)) > nextFigure.getyPos()) != myController.isGoDown()){   // no pega con otro
-            if((thisFigure.yPos < height) != myController.isGoDown()){   // llega al final
+        //caso en el que no hay mas figuras
+        if(nextFigure == null) return false;
+        
+        if(((thisFigure.yPos + (thisFigure.size)) > nextFigure.getyPos()) != myController.isGoDown()){   // no pega con otro
+            if((thisFigure.yPos < height) == myController.isGoDown()){   // llega al final
                 return false;
+            }else{
+                //kills threead figure 
+                thisFigure.setAlive(false);
+                figuras.remove(thisFigure);
             }
         }
         return true;

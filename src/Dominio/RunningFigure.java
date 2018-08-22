@@ -13,15 +13,26 @@ import java.util.logging.Logger;
  * @author DilanHO
  */
 public class RunningFigure implements Runnable {
-    
+
     private ThreadFigure figure;
-    
-    public void run(){
-        figure.updatePosition();
-        
-        try {Thread.currentThread().sleep(33);
-        } catch (InterruptedException ex) {}
+
+    public RunningFigure(ThreadFigure figure) {
+        this.figure = figure;
     }
-    
-    
+
+    public void run() {
+        while (true) {
+            if (figure.isAlive()) {
+                figure.updatePosition();
+            } else {
+                //System.out.println("Kill");
+                break;
+            }
+            try {
+                Thread.currentThread().sleep(33);
+            } catch (InterruptedException ex) {
+            }
+        }
+    }
+
 }

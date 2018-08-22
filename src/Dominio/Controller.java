@@ -7,6 +7,9 @@ package Dominio;
 
 import java.util.ArrayList;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  *
  * @author Charlie
@@ -16,7 +19,7 @@ public class Controller {
     float height;
     boolean goDown;
     ArrayList<TrackQueue> tracks;
-    
+    ExecutorService threadPool;
 
     public Controller(int numTracks, float pWidht, float pHeight) {
         tracks = new ArrayList<>();
@@ -24,7 +27,8 @@ public class Controller {
             tracks.add(new TrackQueue(i,0,0,0,this));
         }
         updateTracks(pWidht, pHeight);
-        
+        threadPool = Executors.newCachedThreadPool();
+        goDown = true;
     }
     
     
@@ -57,14 +61,25 @@ public class Controller {
         while(amount-- > 0){
             int targetTrack  = (int)(Math.floor(Math.random()*tracks.size() -0.001));
             //se recomienda unir la figura y el thread aca en el controlador !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            tracks.get(targetTrack).createFigure(speed);
+            ThreadFigure actualFigure = tracks.get(targetTrack).createFigure(speed);
 
+            RunningFigure runnableNewFigure = new RunningFigure(actualFigure);
+            
+            threadPool.execute(runnableNewFigure);
             
        }
     }
 
     public boolean isGoDown() {
         return goDown;
+    }
+    
+    public void stop(){
+        threadPool.shutdownNow();
+    }
+    
+    public void invertTracks(){
+        
     }
     
     

@@ -19,7 +19,11 @@ public class ProyectoThreads extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLDocument.fxml"));
+        Parent root = (Parent)loader.load();
+        
+        FXMLDocumentController controller = (FXMLDocumentController)loader.getController();
+        controller.setupStageListeners(stage);
         
         Scene scene = new Scene(root);
         

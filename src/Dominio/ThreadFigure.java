@@ -25,13 +25,16 @@ public class ThreadFigure {
     int pos;
     float speed;
     float size = 10;
+    private boolean alive;
+    
     //relation of size from figure and track width
     private static final float trackRatio = 0.2f;
     
 
     public ThreadFigure() {
         figurecolor = Color.hsb(Math.random()*360, 1, 1);
-        figureType = FigureType.SQUARE;
+        figureType = FigureType.CLOCK;
+        alive = true;
     }
 
     public ThreadFigure(Color figurecolor, FigureType figureType, float xPos, float yPos, Controller myController, TrackQueue track, float actualXPos, int pos) {
@@ -43,6 +46,7 @@ public class ThreadFigure {
         this.track = track;
         this.actualXPos = actualXPos;
         this.pos = pos;
+        alive = true;
     }
     
     public void paintSelf(){
@@ -56,11 +60,15 @@ public class ThreadFigure {
         
     }
     
-    public void updatePosition(){
-        if(!track.checkColition(this)){
+    public synchronized void updatePosition(){
+       if(!track.checkColition(this)){
+           if(myController.isGoDown()){
             yPos += speed;
         }
-        
+           else{
+               yPos -= speed;
+           }
+       }
     }
 
     public float getSpeed() {
@@ -85,6 +93,22 @@ public class ThreadFigure {
 
     public void setyPos(float yPos) {
         this.yPos = yPos;
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
+
+    public TrackQueue getTrack() {
+        return track;
+    }
+
+    public void setTrack(TrackQueue track) {
+        this.track = track;
     }
     
     
