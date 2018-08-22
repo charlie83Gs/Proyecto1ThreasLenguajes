@@ -44,14 +44,23 @@ public class Painter {
     public void paintFigure(float pXpos, float pYpos,float size, Color pFigureColor,FigureType pFigureType){
         //dibujamos en el color de la figura
         context.setFill(pFigureColor);
+        context.setStroke(pFigureColor);
+        float desplazamiento = size/2;
+        float xpos = pXpos-desplazamiento;
+        float ypos = pYpos - desplazamiento;
         switch(pFigureType){
             case SQUARE:
                 //dibujamos un cuadrado
-                context.fillRect(pXpos, pYpos, 60, 60);
+                context.fillRect(xpos, ypos, size, size);
+                //context.fillRoundRect(xpos, ypos, size, 50, 20, 20);
                 break;
             case CIRCLE:
                 //dibujamos un circulo
-                
+                context.fillOval(xpos, ypos, size, size);
+                break;
+            case CLOCK:
+                context.strokeOval(xpos, ypos, size, size);
+                context.fillOval(xpos, ypos, size*0.5, size*0.5);
                 break;
             default:
         }

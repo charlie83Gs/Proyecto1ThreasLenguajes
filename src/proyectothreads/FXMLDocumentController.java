@@ -18,6 +18,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import Dominio.Painter;
+import java.time.Duration;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
@@ -97,12 +101,26 @@ public class FXMLDocumentController implements Initializable {
             redraw();
         });
         
+        
+        //se hace schedule a dibujar la pantalla every x miliseconds
+        Timeline fiveSecondsWonder = new Timeline(new KeyFrame(javafx.util.Duration.millis(33), new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                //System.out.println("this is called every 5 seconds on UI thread");
+                redraw();
+            }
+        }));
+        fiveSecondsWonder.setCycleCount(Timeline.INDEFINITE);
+        fiveSecondsWonder.play();
+        
     }
 
     public void redraw(){
         ThreadFigure figure = new ThreadFigure();
         figure.paintSelf();
         controller.paintTracks();
+        controller.updateTracks((float)cnv_Carreras.getWidth(), (float)cnv_Carreras.getHeight());
     }
 
     public void update(double width, double height){
