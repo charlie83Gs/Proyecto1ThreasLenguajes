@@ -13,6 +13,7 @@ import javafx.scene.paint.Color;
  *
  * @author Charlie
  */
+
 public class ThreadFigure {
     Color figurecolor;
     FigureType figureType;
@@ -24,7 +25,9 @@ public class ThreadFigure {
     int pos;
     float speed;
     float size = 10;
-
+    //relation of size from figure and track width
+    private static final float trackRatio = 0.2f;
+    
 
     public ThreadFigure() {
         figurecolor = Color.hsb(Math.random()*360, 1, 1);
@@ -47,9 +50,9 @@ public class ThreadFigure {
         Painter.getPainter().paintFigure(xPos, yPos,size, figurecolor, figureType);
     }
     
-    public void update(float pWidth,float pHeigth){
+    public void update(float pWidth){
         //float nsize = pWidth*0.9f;
-        size = pWidth*0.9f;
+        size = pWidth*trackRatio;
         
     }
 
