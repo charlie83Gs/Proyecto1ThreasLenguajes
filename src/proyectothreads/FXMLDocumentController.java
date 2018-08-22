@@ -6,6 +6,7 @@
 package proyectothreads;
 
 import Dominio.Controller;
+import Dominio.ListenerHelper;
 import Dominio.ThreadFigure;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -67,6 +68,9 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     private Button btn_simulate;
 
+    private boolean runningSimulation;
+    private int waitTime;
+
     @FXML
     private void handleButtonAction(ActionEvent event) {
         System.out.println("You clicked me!");
@@ -77,6 +81,9 @@ public class FXMLDocumentController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        runningSimulation = false;
+        waitTime = 0;
 
         cnv_Carreras.widthProperty().bind(anc_container.widthProperty().subtract(200));
         cnv_Carreras.heightProperty().bind(anc_container.heightProperty().subtract(30));
@@ -108,14 +115,24 @@ public class FXMLDocumentController implements Initializable {
             public void handle(ActionEvent event) {
                 //System.out.println("this is called every 5 seconds on UI thread");
                 redraw();
+                if (runningSimulation) {
+                    if (--waitTime < 0) {
+                        createRandomFigure();
+                        waitTime = (int) (Math.random() * 60);
+                    }
+                }
+
             }
         }));
         frameScheduler.setCycleCount(Timeline.INDEFINITE);
         frameScheduler.play();
-        
+
+        ListenerHelper.convert_to_number_field(tf_Speed);
+        ListenerHelper.convert_to_number_field(tf_Amount);
+        ListenerHelper.convert_to_float_field(tf_Barrera);
     }
-    
-    public void setupStageListeners(Stage stage){
+
+    public void setupStageListeners(Stage stage) {
         stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
@@ -123,7 +140,7 @@ public class FXMLDocumentController implements Initializable {
             }
         });
     }
-    
+
     public void redraw() {
         ThreadFigure figure = new ThreadFigure();
         figure.paintSelf();
@@ -138,17 +155,22 @@ public class FXMLDocumentController implements Initializable {
     //funciones para los botones
     @FXML
     public void createFigures() {
-        controller.createFigures(10.0f, 20);
+        controller.createFigures(Integer.parseInt(tf_Speed.getText().toString()), Integer.parseInt(tf_Amount.getText().toString()));
 
     }
 
     @FXML
     public void toggleBarriers() {
-        controller.setBarrier(5);
-        controller.setBarrier(7);
-        controller.setBarrier(4);
-        controller.setBarrier(1);
-        controller.setBarrier(0);
+        String barriers = tf_Barrera.getText().toString().trim();
+
+        if (barriers.length() > 0) {
+            for (String track : barriers.split(",")) {
+                int targetTrack = Integer.parseInt(track);
+                if (targetTrack < 11) {
+                    controller.setBarrier(targetTrack);
+                }
+            }
+        }
 
     }
 
@@ -159,7 +181,7 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     public void simulate() {
-
+        runningSimulation = !runningSimulation;
     }
 
     @FXML
@@ -167,4 +189,9 @@ public class FXMLDocumentController implements Initializable {
         controller.togglePaused();
     }
 
+    public void createRandomFigure() {
+
+        controller.createFigures((float) (Math.random() * 10.0f - 0.001), (int) (Math.random() * 10));
+
+    }
 }

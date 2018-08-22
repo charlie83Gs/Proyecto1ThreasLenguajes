@@ -40,7 +40,7 @@ public class TrackQueue {
         barrier = false;
     }
     
-    public void update(float pXpos, float pWidth, float pHeigth){
+    public synchronized void update(float pXpos, float pWidth, float pHeigth){
         width = pWidth;
         height = pHeigth;
         xPos = pXpos;
@@ -72,7 +72,7 @@ public class TrackQueue {
     
     }
     
-    public void paintSelf(){
+    public synchronized void paintSelf(){
         Painter.getPainter().paintTrack(xPos,width,height,barrier);
         for(ThreadFigure figure: figuras){
             figure.paintSelf();

@@ -61,7 +61,7 @@ public class Controller {
     public void createFigures(float speed, int amount){
         //se crean amount figuras
         while(amount-- > 0){
-            int targetTrack  = (int)(Math.floor(Math.random()*tracks.size() -0.001));
+            int targetTrack  = (int)(Math.floor(Math.random()*tracks.size() ));
             //se recomienda unir la figura y el thread aca en el controlador !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             ThreadFigure actualFigure = tracks.get(targetTrack).createFigure(speed);
 
