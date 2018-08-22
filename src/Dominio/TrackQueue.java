@@ -40,6 +40,7 @@ public class TrackQueue {
         
         for(ThreadFigure figure: figuras){
             figure.xPos = xPos + width / 2;
+            figure.update(width);
         }
         
     }

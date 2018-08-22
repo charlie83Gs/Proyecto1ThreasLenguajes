@@ -15,5 +15,6 @@ package Dominio;
  */
 public enum FigureType {
     CIRCLE,
-    SQUARE
+    SQUARE,
+    CLOCK
 }
