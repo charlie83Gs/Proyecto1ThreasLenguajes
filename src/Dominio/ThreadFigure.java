@@ -52,6 +52,13 @@ public class ThreadFigure {
         size = pWidth*0.9f;
         
     }
+    
+    public void updatePosition(){
+        if(!track.checkColition(this)){
+            yPos += speed;
+        }
+        
+    }
 
     public float getSpeed() {
         return speed;
