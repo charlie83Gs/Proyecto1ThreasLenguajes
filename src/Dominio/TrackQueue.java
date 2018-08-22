@@ -21,14 +21,16 @@ public class TrackQueue {
     float xPos;
     float width;
     float height;
+    Controller myController;
     ArrayList<ThreadFigure> figuras;
 
-    public TrackQueue(int trackId, float xPos, float width, float height) {
+    public TrackQueue(int trackId, float xPos, float width, float height, Controller pmyController) {
         this.trackId = trackId;
         this.xPos = xPos;
         this.width = width;
         this.height = height;
         figuras = new ArrayList<>();
+        this.myController = pmyController;
     }
     
     public void update(float pXpos, float pWidth, float pHeigth){
@@ -63,8 +65,18 @@ public class TrackQueue {
         }
     }
     
-    
+    private ThreadFigure getNext(ThreadFigure thisFigure){
+        return figuras.get(figuras.indexOf(thisFigure) + 1);
+    }
 
-    
+    public boolean checkColition(ThreadFigure thisFigure){
+        ThreadFigure nextFigure = this.getNext(thisFigure);
+        if(((thisFigure.yPos + (thisFigure.size/2)) > nextFigure.getyPos()) != myController.isGoDown()){   // no pega con otro
+            if((thisFigure.yPos < height) != myController.isGoDown()){   // llega al final
+                return false;
+            }
+        }
+        return true;
+    }
     
 }
