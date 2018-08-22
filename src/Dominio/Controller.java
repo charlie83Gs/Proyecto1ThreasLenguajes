@@ -14,12 +14,14 @@ import java.util.ArrayList;
 public class Controller {
     float width;
     float height;
+    boolean goDown;
     ArrayList<TrackQueue> tracks;
+    
 
     public Controller(int numTracks, float pWidht, float pHeight) {
         tracks = new ArrayList<>();
         for(int i = 0; i < numTracks; i++ ){
-            tracks.add(new TrackQueue(i,0,0,0));
+            tracks.add(new TrackQueue(i,0,0,0,this));
         }
         updateTracks(pWidht, pHeight);
         
@@ -60,4 +62,10 @@ public class Controller {
             
        }
     }
+
+    public boolean isGoDown() {
+        return goDown;
+    }
+    
+    
 }
