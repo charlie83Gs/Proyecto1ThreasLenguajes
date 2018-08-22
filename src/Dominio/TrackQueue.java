@@ -37,6 +37,7 @@ public class TrackQueue {
         this.myController = pmyController;
         goDown = true;
         paused = false;
+        barrier = false;
     }
     
     public void update(float pXpos, float pWidth, float pHeigth){
@@ -72,7 +73,7 @@ public class TrackQueue {
     }
     
     public void paintSelf(){
-        Painter.getPainter().paintTrack(xPos,width,height);
+        Painter.getPainter().paintTrack(xPos,width,height,barrier);
         for(ThreadFigure figure: figuras){
             figure.paintSelf();
         }
@@ -92,7 +93,20 @@ public class TrackQueue {
     public synchronized boolean checkColition(ThreadFigure thisFigure){
         ThreadFigure nextFigure = this.getNext(thisFigure);
         //caso en el que no hay mas figuras
+        //pausa
         if(paused)return true;
+        
+        //colisiones con barreras
+        if(myController.isGoDown()){
+            if((thisFigure.yPos + (thisFigure.size) >= height/2+1) && thisFigure.yPos < height / 2 && barrier){
+                return true;
+            }
+        }else{
+            if((thisFigure.yPos - (thisFigure.size) <= height/2-1) && thisFigure.yPos > height/2 && barrier){
+                return true;
+            }
+         }
+        //ultimo de la cola
         if(nextFigure == null) return false;
         
         
@@ -102,17 +116,20 @@ public class TrackQueue {
             removeLastFigure(thisFigure);
             return false;
         }
-        
-        
+
+        //colisiones entre figuras
         if(myController.isGoDown()){
             if(thisFigure.yPos + (thisFigure.size) <= nextFigure.getyPos()+1){
                 return false;
             }
         }else{
-            if(thisFigure.yPos - (thisFigure.size) >= nextFigure.getyPos()-1){
+            if( thisFigure.yPos - (thisFigure.size) >= nextFigure.getyPos()-1){
                 return false;
             }
+
         }
+        
+        
         
         
         /*if(((thisFigure.yPos + (thisFigure.size)) > nextFigure.getyPos()) != myController.isGoDown()){   // no pega con otro
@@ -132,9 +149,6 @@ public class TrackQueue {
        this.goDown = !this.goDown;
     }
     
-    public void barrier(){
-        
-    }
 
     public synchronized boolean isGoDown() {
         return goDown;
@@ -150,6 +164,14 @@ public class TrackQueue {
 
     public void setPaused(boolean paused) {
         this.paused = paused;
+    }
+
+    public void setBarrier(boolean barrier) {
+        this.barrier = barrier;
+    }
+
+    public boolean isBarrier() {
+        return barrier;
     }
     
     

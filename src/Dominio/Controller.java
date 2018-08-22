@@ -105,6 +105,10 @@ public class Controller {
         }
     }
     
+    public void setBarrier(int track){
+        tracks.get(track).setBarrier(!tracks.get(track).isBarrier());
+    }
+    
     
     
 }

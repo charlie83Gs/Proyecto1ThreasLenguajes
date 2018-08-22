@@ -144,6 +144,11 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     public void toggleBarriers() {
+        controller.setBarrier(5);
+        controller.setBarrier(7);
+        controller.setBarrier(4);
+        controller.setBarrier(1);
+        controller.setBarrier(0);
 
     }
 
